@@ -5,19 +5,20 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "babel app-src -d app --source-maps",
-    "watch": "babel app-src -d app --source-maps --watch"
+    "build-dev": "webpack --config webpack.config.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "reflect-metadata": "^0.1.10",
-    "systemjs": "^0.20.12"
+    "reflect-metadata": "^0.1.10"
   },
   "devDependencies": {
-    "babel-cli": "^6.24.1",
+    "@babel/core": "^7.13.1",
+    "@babel/preset-env": "^7.13.5",
+    "babel-loader": "^8.2.2",
     "babel-plugin-transform-decorators-legacy": "^1.3.4",
     "babel-plugin-transform-es2015-modules-systemjs": "^6.24.1",
-    "babel-preset-es2017": "^6.24.1"
+    "babel-preset-es2017": "^6.24.1",
+    "webpack": "^5.24.1"
   }
 }
