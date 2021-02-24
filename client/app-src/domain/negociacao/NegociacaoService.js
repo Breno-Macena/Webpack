@@ -2,6 +2,8 @@ import { HttpService } from '../../util/HttpService.js';
 import { Negociacao } from './Negociacao.js';
 import { ApplicationException } from '../../util/ApplicationException.js';
 
+const urlBase = "http://localhost:3000/";
+
 export class NegociacaoService {
 
     constructor() {
@@ -12,7 +14,7 @@ export class NegociacaoService {
     obtemNegociacoesDaSemana() {
 
         return this._http
-            .get('negociacoes/semana')
+            .get(`${urlBase}negociacoes/semana`)
             .then(
             dados =>
                 dados.map(objeto =>
@@ -28,7 +30,7 @@ export class NegociacaoService {
     obtemNegociacoesDaSemanaAnterior() {
 
         return this._http
-            .get('negociacoes/anterior')
+            .get(`${urlBase}negociacoes/anterior`)
             .then(
             dados => dados.map(objeto =>
                 new Negociacao(new Date(objeto.data), objeto.quantidade, objeto.valor))
@@ -43,7 +45,7 @@ export class NegociacaoService {
     obtemNegociacoesDaSemanaRetrasada() {
 
         return this._http
-            .get('negociacoes/retrasada')
+            .get(`${urlBase}negociacoes/retrasada`)
             .then(
             dados => dados.map(objeto =>
                 new Negociacao(new Date(objeto.data), objeto.quantidade, objeto.valor))
