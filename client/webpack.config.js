@@ -22,6 +22,10 @@ module.exports = {
           loader: "babel-loader",
         },
       },
+      {
+        text: /\.css$/,
+        loader: 'style-loader!css-loader'
+      }
     ],
   },
   plugins
