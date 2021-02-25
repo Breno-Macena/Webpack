@@ -3,9 +3,20 @@ const babiliPlugin = require("babili-webpack-plugin"); // minificador de js
 const extractTextPlugin = require("extract-text-webpack-plugin"); // otimizador de imports de estilos
 const optimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin"); // minificador de css
 const webpack = require("webpack");
+const htmlWebpackPlugin = require("html-webpack-plugin"); // simplifica a importação de scripts e estilos
 const { config } = require("process");
 
 let plugins = [];
+plugins.push(new htmlWebpackPlugin({
+  hash: true,
+  minify: {
+    html5: true,
+    collapseWhitespace: true,
+    removeComments: true
+  },
+  filename: "index.html",
+  template: `${__dirname}/main.html`
+}));
 plugins.push(new extractTextPlugin("styles.css"));
 // importação do jQuery em contexto global
 plugins.push(
@@ -44,8 +55,7 @@ module.exports = {
   },
   output: {
     filename: "bundle.js",
-    path: path.resolve(__dirname, "dist"),
-    publicPath: "dist",
+    path: path.resolve(__dirname, "dist")
   },
   module: {
     rules: [
