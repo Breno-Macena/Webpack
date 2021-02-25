@@ -7,16 +7,18 @@ const htmlWebpackPlugin = require("html-webpack-plugin"); // simplifica a import
 const { config } = require("process");
 
 let plugins = [];
-plugins.push(new htmlWebpackPlugin({
-  hash: true,
-  minify: {
-    html5: true,
-    collapseWhitespace: true,
-    removeComments: true
-  },
-  filename: "index.html",
-  template: `${__dirname}/main.html`
-}));
+plugins.push(
+  new htmlWebpackPlugin({
+    hash: true,
+    minify: {
+      html5: true,
+      collapseWhitespace: true,
+      removeComments: true,
+    },
+    filename: "index.html",
+    template: `${__dirname}/main.html`,
+  })
+);
 plugins.push(new extractTextPlugin("styles.css"));
 // importação do jQuery em contexto global
 plugins.push(
@@ -32,7 +34,10 @@ plugins.push(
     filename: "vendor.bundle.js",
   })
 );
+
+let SERVICE_URL = JSON.stringify("http://localhost:3000");
 if (process.env.NODE_ENV == "production") {
+  SERVICE_URL = JSON.stringify("https://endereco-da-api.com.br");
   plugins.push(new webpack.optimize.ModuleConcatenationPlugin()); // otimização de importação de módulos
   plugins.push(new babiliPlugin());
   plugins.push(
@@ -48,6 +53,13 @@ if (process.env.NODE_ENV == "production") {
   );
 }
 
+// define qual URL será usada em ambiente de desenvolvimento e de produção
+plugins.push(
+  new webpack.DefinePlugin({
+    SERVICE_URL,
+  })
+);
+
 module.exports = {
   entry: {
     app: "./app-src/app.js",
@@ -55,7 +67,7 @@ module.exports = {
   },
   output: {
     filename: "bundle.js",
-    path: path.resolve(__dirname, "dist")
+    path: path.resolve(__dirname, "dist"),
   },
   module: {
     rules: [
