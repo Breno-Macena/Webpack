@@ -8,26 +8,40 @@ const { config } = require("process");
 let plugins = [];
 plugins.push(new extractTextPlugin("styles.css"));
 // importação do jQuery em contexto global
-plugins.push(new webpack.ProvidePlugin({
-  '$': 'jquery/dist/jquery.js',
-  'jQuery': 'jquery/dist/jquery.js'
-}))
+plugins.push(
+  new webpack.ProvidePlugin({
+    $: "jquery/dist/jquery.js",
+    jQuery: "jquery/dist/jquery.js",
+  })
+);
+// divisão entre bibliotecas de terceiro e bibliotecas próprias doo projeto
+plugins.push(
+  new webpack.optimize.CommonsChunkPlugin({
+    name: "vendor",
+    filename: "vendor.bundle.js",
+  })
+);
 if (process.env.NODE_ENV == "production") {
   plugins.push(new webpack.optimize.ModuleConcatenationPlugin()); // otimização de importação de módulos
   plugins.push(new babiliPlugin());
-  plugins.push(new optimizeCSSAssetsPlugin({
-    cssProcessor: require('cssnano'),
-    cssProcessorOptions: {
-      discardComments: {
-        removeAll: true
-      }
-    },
-    canPrint: true
-  }));
+  plugins.push(
+    new optimizeCSSAssetsPlugin({
+      cssProcessor: require("cssnano"),
+      cssProcessorOptions: {
+        discardComments: {
+          removeAll: true,
+        },
+      },
+      canPrint: true,
+    })
+  );
 }
 
 module.exports = {
-  entry: "./app-src/app.js",
+  entry: {
+    app: "./app-src/app.js",
+    vendor: ["jquery", "bootstrap", "reflect-metadata"],
+  },
   output: {
     filename: "bundle.js",
     path: path.resolve(__dirname, "dist"),
@@ -35,21 +49,24 @@ module.exports = {
   },
   module: {
     rules: [
-      { // regra de carregamento de scripts, menos do nome-modules
+      {
+        // regra de carregamento de scripts, menos do nome-modules
         test: /\.js$/,
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
         },
       },
-      { // regra de carregamento de estilos de forma otimizada com extract-text-webpack-plugin
+      {
+        // regra de carregamento de estilos de forma otimizada com extract-text-webpack-plugin
         test: /\.css$/,
         use: extractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: "css-loader"
-        })
+          fallback: "style-loader",
+          use: "css-loader",
+        }),
       },
-      { // regras de carregamento de arquivos comumente usados pelo bootstrap
+      {
+        // regras de carregamento de arquivos comumente usados pelo bootstrap
         test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
         loader: "url-loader?limit=10000&mimetype=application/font-woff",
       },
